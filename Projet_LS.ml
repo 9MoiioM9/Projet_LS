@@ -89,7 +89,7 @@ let res5 = eval exemple5 valuation;; (* false *)
 
 let rec vars formula =
   match formula with
-  | Var _ -> [formula]
+  | Var f -> [f]
   | Non f -> vars f
   | Et (f1, f2) -> vars(f1) @ vars(f2)
   | Ou (f1,f2) -> vars(f1) @ vars(f2)
@@ -101,10 +101,10 @@ vars(exemple1);; (* ["Q"; "P"; "M"] *)
 (* Question 3 *)
 
 let drop var =
-  List.sort_uniq (fun (Var x) (Var y) -> compare x y) var
+  List.sort_uniq (fun (x : string) (y : string) -> compare x y) var
 ;;
   
-let input_list = [Var "x"; Var "y"; Var "z"; Var "x"; Var "y"; Var "w"; Var "z"];;
+let input_list = ["x"; "y";  "z";  "x";  "y";  "w";  "z"];;
 
 drop input_list;;
 
