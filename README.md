@@ -89,7 +89,7 @@ Voir le code sur le fichier Projet_LS.ml
 Une tautologie est une formule qui est toujours vraie, quellle que soit la valeur de vérité de ses variables.
 
 * P ==> ~(~P)
-* P \/ ~P
+* P \\/ ~P
 * Q ==> (P \/ ~P)
 
 * P ==> ~(~P)
@@ -100,17 +100,17 @@ Une tautologie est une formule qui est toujours vraie, quellle que soit la valeu
     |   F   |    T   |        T        |
 
 
-* P \/ ~P
+* P \\/ ~P
 
-    |   P   |   ~P   |   P \/ ~P   |
+    |   P   |   ~P   |   P \\/ ~P   |
     |-------|--------|-------------|
     |   T   |    F   |      T      |
     |   F   |    T   |      T      |
 
 
-* Q ==> (P \/ ~P)
+* Q ==> (P \\/ ~P)
 
-    |   P   |   Q   |   ~P   |   P \/ ~P   |    Q ==> (P \/ ~P)    |
+    |   P   |   Q   |   ~P   |   P \\/ ~P   |    Q ==> (P \\/ ~P)    |
     |-------|-------|--------|-------------|-----------------------|
     |   T   |   T   |    F   |      T      |           T           |
     |   T   |   F   |    F   |      T      |           T           |
