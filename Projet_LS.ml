@@ -74,11 +74,13 @@ let rec eval formula valuation =
 (* Question 4 *)
 
 
-let res = eval exemple1 valuation;;
-res;;
+let res1 = eval exemple1 valuation;; (* true *)
+let res2 = eval exemple2 valuation;; (* true *)                                   
+let res3 = eval exemple3 valuation;; (* true *)
+let res4 = eval exemple4 valuation;; (* true *)
+let res5 = eval exemple5 valuation;; (* false *)                              
 
-                                                 
-
+                                     
 
 
 
