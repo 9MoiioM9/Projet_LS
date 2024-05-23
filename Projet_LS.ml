@@ -16,7 +16,8 @@ type tformula =
 (* Question 3 *)
 
 (* pour cette fonction nous avons utilisé les symboles ∨ et ∧  car le backslash sort automatiquement du string  *)
-let rec string_of_formula = function
+let rec string_of_formula f =
+  match f with
   | Var v -> v
   | Non f -> "~" ^ (string_of_formula f)
   | Et (f1, f2) -> "(" ^ (string_of_formula f1) ^ " ∧ " ^ (string_of_formula f2) ^ ")"
@@ -78,7 +79,10 @@ let res1 = eval exemple1 valuation;; (* true *)
 let res2 = eval exemple2 valuation;; (* true *)                                   
 let res3 = eval exemple3 valuation;; (* true *)
 let res4 = eval exemple4 valuation;; (* true *)
-let res5 = eval exemple5 valuation;; (* false *)                              
+let res5 = eval exemple5 valuation;; (* false *)    
+
+
+
 
 (* 2.2 *)
 (* Question 2 *)
