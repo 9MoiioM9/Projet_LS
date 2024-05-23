@@ -85,6 +85,8 @@ let res5 = eval exemple5 valuation;; (* false *)
 
 
 
+
+
                               
                               
 
