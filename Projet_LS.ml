@@ -114,15 +114,26 @@ let set_vars formula =
 
 (* Question 4 *)
 
-let enumerate_cases 
-    
+let rec generate_true_values n =
+  if n = 0 then [[]]
+  else
+    let rest = generate_true_values (n - 1) in
+    List.map (fun vals -> true :: vals) rest @ List.map (fun vals -> false :: vals) rest
+;;
 
 
-      
-                                     
+let rec enumerate_cases l =
+  let res = generate_true_values (List.length l) in
+  let rec build_case values =
+    match values with
+    | [] -> []
+    | hd :: tl ->
+        if hd then "V" :: build_case tl
+        else "F" :: build_case tl
+  in
+  List.map build_case res
+;;
 
-
-
-                              
-                              
-
+(* Pour savoir le nombre de lignes à calculer il faut prendre 2^n avec n le nombre d'argument dans la liste en entrée*)
+(* Donc pour trois variables P,Q et R on aura 2^3 donc 8 lignes*)
+enumerate_cases(set_vars exemple1);;

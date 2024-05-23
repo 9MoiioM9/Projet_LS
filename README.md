@@ -1,5 +1,7 @@
 # Projet Logiciels Sûrs
 
+_Pour la suite des exercices on concidère T pour True donc Vrai, F pour False donc Faux_
+
 ## 1 Logique des propositions
 
 ### Question 1 
@@ -80,6 +82,8 @@ Voir le code sur le fichier Projet_LS.ml
 ### Question 3 
 
 ### Question 4 
+Pour savoir combien de ligne on doit calculer on prend le nombre d'argument de la liste en entrée en puissance de 2.
+Donc avec les trois arguments P, Q et R on aura 2^3 donc 8 lignes.
 
 ### Question 5 
 
@@ -102,7 +106,7 @@ Une tautologie est une formule qui est toujours vraie, quellle que soit la valeu
 
 * P \\/ ~P
 
-    |   P   |   ~P   |   P \\/ ~P   |
+    |   P   |   ~P   |   P \\/ ~P  |
     |-------|--------|-------------|
     |   T   |    F   |      T      |
     |   F   |    T   |      T      |
@@ -110,7 +114,7 @@ Une tautologie est une formule qui est toujours vraie, quellle que soit la valeu
 
 * Q ==> (P \\/ ~P)
 
-    |   P   |   Q   |   ~P   |   P \\/ ~P   |    Q ==> (P \\/ ~P)    |
+    |   P   |   Q   |   ~P   |   P \\/ ~P  |    Q ==> (P \\/ ~P)   |
     |-------|-------|--------|-------------|-----------------------|
     |   T   |   T   |    F   |      T      |           T           |
     |   T   |   F   |    F   |      T      |           T           |
