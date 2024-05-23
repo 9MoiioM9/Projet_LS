@@ -66,7 +66,6 @@ Voir le code sur le fichier Projet_LS.ml
     |   F   |   T   |   F   |     F     |    T    |         T         |
     |   F   |   F   |   T   |     F     |    F    |         F         |
     |   F   |   F   |   F   |     F     |    T    |         T         |
-    |_______|_______|_______|___________|_________|___________________|
 
 * ~Q ==> ~M
 
@@ -77,7 +76,6 @@ Voir le code sur le fichier Projet_LS.ml
     |   T   |   F   |    F   |    T     |       T       |
     |   F   |   T   |    T   |    F     |       F       |
     |   F   |   F   |    T   |    T     |       T       |
-    |_______|_______|________|__________|_______________|
 
 ### Question 2 
 
