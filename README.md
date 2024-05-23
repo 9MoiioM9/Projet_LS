@@ -90,7 +90,7 @@ Une tautologie est une formule qui est toujours vraie, quellle que soit la valeu
 
 * P ==> ~(~P)
 * P \\/ ~P
-* Q ==> (P \/ ~P)
+* Q ==> (P \\/ ~P)
 
 * P ==> ~(~P)
 
