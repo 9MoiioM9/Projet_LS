@@ -137,3 +137,27 @@ let rec enumerate_cases l =
 (* Pour savoir le nombre de lignes à calculer il faut prendre 2^n avec n le nombre d'argument dans la liste en entrée*)
 (* Donc pour trois variables P,Q et R on aura 2^3 donc 8 lignes*)
 enumerate_cases(set_vars exemple1);;
+enumerate_cases(set_vars exemple2);;
+enumerate_cases(set_vars exemple3);;
+enumerate_cases(set_vars exemple4);;
+enumerate_cases(set_vars exemple5);;
+
+let tautology formule =
+  let rec gen_valuations vars =
+    match vars with
+    | [] -> [[]]
+    | v :: res ->
+        let rest = gen_valuations res in
+        List.concat [List.map (fun r -> (v, true) :: r) rest; List.map (fun r -> (v, false) :: r) rest]
+  in
+  let variables = List.sort_uniq compare (vars formule) in
+  let valuations = gen_valuations variables in
+  List.for_all (fun v -> eval formule v) valuations
+;;
+
+tautology (Alors (Var "P", Non(Non(Var "P"))));; (* P ==> ~(~P) - Renvoie True*)
+tautology (Alors (Var "P", Non(Var "P")));; (* P ==> ~(P) - Renvoie False *)
+tautology (Ou(Var "P", Non(Var "P")));; (* P \/ ~P - Renvoie True *)
+tautology (Et(Var "P", Non(Var "P")));; (* P /\ ~P - Renvoie False *)
+tautology (Alors (Var "Q", Ou(Var "P", Non(Var "P"))));; (* Q ==> (P \\/ ~P) - Renvoie True *)
+tautology (Alors (Var "Q", Ou(Var "P", Var "P")));; (* Q ==> (P \/ P) - Renvoie False *)
