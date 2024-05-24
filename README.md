@@ -184,22 +184,22 @@ La fonction __valid_ident__ :
     |([], _) -> true
     |(liste, _) -> not(List.exists (fun (n,_) -> n = ident) liste)
     ;;
-    
+
 
 Preuve pour la proposition (P Q R : Prop) : (P \\/ Q -> R) -> (P -> R) /\ (Q -> R) de l'énoncé : 
 
-    Lemma propProjet (P Q R : Prop) : (P \\/ Q -> R) -> (P -> R) /\ (Q -> R).
+    Lemma propProjet (P Q R : Prop) : (P \/ Q -> R) -> (P -> R) /\ (Q -> R).
     Proof.
         intros.
         And_Intro.
         Impl_Intro.
-        assume (P \\/ Q).
+        assume (P \/ Q).
         Impl_Elim in H and H1.
         exact H2.
         Or_Intro_1.
         exact H0.
         Impl_Intro.
-        assume (P \\/ Q).
+        assume (P \/ Q).
         Impl_Elim in H and H1.
         exact H2.
         Or_Intro_2.
@@ -211,18 +211,18 @@ Preuve pour la proposition (P Q R : Prop) : (P \\/ Q -> R) -> (P -> R) /\ (Q -> 
 Voici la preuve faite sur coq, nous nous sommes basé sur celle-ci afin de faire les étapes.
 Nous avons bien sûr dû changer les étapes selon les résultats obtenu avec notre fonction __apply_tactic__
 
-    Lemma p (P Q R : Prop) : (P \\/ Q -> R) -> (P -> R) /\ (Q -> R).
+    Lemma p (P Q R : Prop) : (P \/ Q -> R) -> (P -> R) /\ (Q -> R).
     Proof.
         Impl_Intro.
         And_Intro.
         Impl_Intro.
-        assume (P \\/ Q).
+        assume (P \/ Q).
         Impl_Elim in H and H1.
         exact H2.
         Or_Intro_1.
         exact H0.
         Impl_Intro.
-        assume (P \\/ Q).
+        assume (P \/ Q).
         Impl_Elim in H and H1.
         exact H2.
         Or_Intro_2.
