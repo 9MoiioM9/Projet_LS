@@ -147,7 +147,7 @@ Fonction _tautology_ :
     let valuations = tautology_aux variables in
     List.for_all (fun v -> eval formule v) valuations
     ;;
-    
+
 
 ### Question 3
 Concernant la fonction __tautology__ le principal inconvénient est la complexité exponentielle.
@@ -161,6 +161,25 @@ Preuve pour la proposition (P Q R : Prop) : (P \/ Q -> R) -> (P -> R) /\ (Q -> R
 Lemma propProjet (P Q R : Prop) : (P \/ Q -> R) -> (P -> R) /\ (Q -> R).
 Proof.
     intros.
+    And_Intro.
+    Impl_Intro.
+    assume (P \/ Q).
+    Impl_Elim in H and H1.
+    exact H2.
+    Or_Intro_1.
+    exact H0.
+    Impl_Intro.
+    assume (P \/ Q).
+    Impl_Elim in H and H1.
+    exact H2.
+    Or_Intro_2.
+    exact H0.
+Qed.
+
+
+Lemma p (P Q R : Prop) : (P \/ Q -> R) -> (P -> R) /\ (Q -> R).
+Proof.
+    Impl_Intro.
     And_Intro.
     Impl_Intro.
     assume (P \/ Q).
