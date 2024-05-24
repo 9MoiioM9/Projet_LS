@@ -123,6 +123,48 @@ Une tautologie est une formule qui est toujours vraie, quellle que soit la valeu
 
 ### Question 2 
 
+Fonction _tautology_ : 
+
+    let tautology formule =
+    let rec tautology_aux vars =
+        match vars with
+        | [] -> [[]]
+        | v :: res ->
+            let rest = tautology_aux res in
+            List.concat [List.map (fun r -> (v, true) :: r) rest; List.map (fun r -> (v, false) :: r) rest]
+    in
+    let variables = List.sort_uniq compare (vars formule) in
+    let valuations = tautology_aux variables in
+    List.for_all (fun v -> eval formule v) valuations
+    ;;
+
 ### Question 3
+Concernant la fonction __tautology__ le principal inconvénient est la complexité exponentielle.
+Avec un grand nombre de variables on obtient un très grand nombre de combinaisons, ce qui peu rendre la fonction inefficace pour des formules trop grande.
+De plus on execute un double parcours de la liste des variables avec la fonction __List.sort_uniq__ mais aussi une double évaluation avec chaque appel de la fonction __eval__ à chaque valuations possibles.
 
 ## 3 Preuves de formules propositionnelles 
+
+Preuve pour la proposition (P Q R : Prop) : (P \/ Q -> R) -> (P -> R) /\ (Q -> R) de l'énoncé : 
+
+Lemma propProjet (P Q R : Prop) : (P \/ Q -> R) -> (P -> R) /\ (Q -> R).
+Proof.
+    intros.
+    And_Intro.
+    Impl_Intro.
+    assume (P \/ Q).
+    Impl_Elim in H and H1.
+    exact H2.
+    Or_Intro_1.
+    exact H0.
+    Impl_Intro.
+    assume (P \/ Q).
+    Impl_Elim in H and H1.
+    exact H2.
+    Or_Intro_2.
+    exact H0.
+Qed.
+
+
+
+

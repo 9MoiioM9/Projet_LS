@@ -113,17 +113,19 @@ let set_vars formula =
 ;;
 
 (* Question 4 *)
-
-let rec generate_true_values n =
+(* Notre fonction enumerate_cases_aux nous permet de calculer toutes les combinaisons possibles de valeurs de vérité*)
+(* Elle est récursive et elle ajoute des valeurs 'true' et 'false' alternativement *)
+let rec enumerate_cases_aux n =
   if n = 0 then [[]]
   else
-    let rest = generate_true_values (n - 1) in
+    let rest = enumerate_cases_aux (n - 1) in
     List.map (fun vals -> true :: vals) rest @ List.map (fun vals -> false :: vals) rest
 ;;
 
-
+(* Notre fonction enumerate_cases est récursive, elle utilise les valeurs générées par enumerate_cases_aux afin *)
+(* de remplir ligne par ligne la table de vérité finale *)
 let rec enumerate_cases l =
-  let res = generate_true_values (List.length l) in
+  let res = enumerate_cases_aux (List.length l) in
   let rec build_case values =
     match values with
     | [] -> []
@@ -136,6 +138,8 @@ let rec enumerate_cases l =
 
 (* Pour savoir le nombre de lignes à calculer il faut prendre 2^n avec n le nombre d'argument dans la liste en entrée*)
 (* Donc pour trois variables P,Q et R on aura 2^3 donc 8 lignes*)
+
+(* Tests de nos exemples vu plus haut dans le code *)
 enumerate_cases(set_vars exemple1);;
 enumerate_cases(set_vars exemple2);;
 enumerate_cases(set_vars exemple3);;
@@ -143,15 +147,15 @@ enumerate_cases(set_vars exemple4);;
 enumerate_cases(set_vars exemple5);;
 
 let tautology formule =
-  let rec gen_valuations vars =
+  let rec tautology_aux vars =
     match vars with
     | [] -> [[]]
     | v :: res ->
-        let rest = gen_valuations res in
+        let rest = tautology_aux res in
         List.concat [List.map (fun r -> (v, true) :: r) rest; List.map (fun r -> (v, false) :: r) rest]
   in
   let variables = List.sort_uniq compare (vars formule) in
-  let valuations = gen_valuations variables in
+  let valuations = tautology_aux variables in
   List.for_all (fun v -> eval formule v) valuations
 ;;
 
