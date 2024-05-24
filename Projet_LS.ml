@@ -196,6 +196,8 @@ let ex_enonce = (("H",Alors (Ou(Var "P",Var "Q"),Var "R")) :: [("H2",Var "P")],O
 print_goal ex_enonce;;
 
 (* 3.2 *)
+(* Question 1 *)
+
 (* Type concernant la tactique avec toutes les possibilités présentent dans l'énoncé*)
 type tactic = 
   |And_Intro
@@ -211,6 +213,32 @@ type tactic =
   |Exact of ident
   |Assume of tformula
 ;;
+
+(* 3.3 *)
+(* Question 1 *)
+
+let fresh_ident () =
+  let rec generate_ident n =
+    let ident = "hyp" ^ string_of_int n in
+    if List.mem ident !used_idents 
+    then generate_ident (n + 1)
+    else (
+      used_idents := ident :: !used_idents;
+      ident
+    )
+  in
+  generate_ident 1
+  ;;
+
+  (* Question 2 *)
+
+  let valid_ident (id : ident) (ctx : (ident * tformula) list) : bool =
+  not (List.exists (fun (id_in_ctx, _) -> id = id_in_ctx) ctx)
+
+  (* Question 3 *)
+
+
+
 
 
 
