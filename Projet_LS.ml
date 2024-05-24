@@ -163,6 +163,8 @@ let tautology formule =
   List.for_all (fun v -> eval formule v) valuations
 ;;
 
+(* Test de la fonction tautology avec chaque exemple de tautologie fait avec un exemple false *)
+
 tautology (Alors (Var "P", Non(Non(Var "P"))));; (* P ==> ~(~P) - Renvoie True*)
 tautology (Alors (Var "P", Non(Var "P")));; (* P ==> ~(P) - Renvoie False *)
 tautology (Ou(Var "P", Non(Var "P")));; (* P \/ ~P - Renvoie True *)
@@ -173,10 +175,42 @@ tautology (Alors (Var "Q", Ou(Var "P", Var "P")));; (* Q ==> (P \/ P) - Renvoie 
 (* 3.1 *)
 
 (* Question 1 *)
-
-type ident = string ;;
-
-type goal = (ident * tformula);;
+type ident = string;;
+type goal = (ident * tformula) list * tformula;;
 
 (* Question 2 *)
+
+let print_goal goal = 
+  let rec print_goal_aux goal =
+  match goal with
+  | ([], formule) -> "======================\n" ^string_of_formula formule
+  | ((header, formule) :: queue, f) -> header ^ ": " ^ string_of_formula formule ^ "\n" ^ (print_goal_aux (queue, f))
+in 
+print_string(print_goal_aux goal)
+
+;;
+
+
+(* Création d'un test venant de l'énoncé, pour le test de la fontion print_goal *)
+let ex_enonce = (("H",Alors (Ou(Var "P",Var "Q"),Var "R")) :: [("H2",Var "P")],Ou(Var "P",Var "Q"));;
+print_goal ex_enonce;;
+
+(* 3.2 *)
+(* Type concernant la tactique avec toutes les possibilités présentent dans l'énoncé*)
+type tactic = 
+  |And_Intro
+  |Or_Intro_1
+  |Or_Intro_2
+  |Impl_Intro
+  |Not_Intro
+  |And_Elim_1 of ident
+  |And_Elim_2 of ident
+  |Or_Elim of ident 
+  |Impl_Elim of ident * ident
+  |Not_Elim of ident
+  |Exact of ident
+  |Assume of tformula
+;;
+
+
 
