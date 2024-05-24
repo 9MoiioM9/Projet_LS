@@ -157,49 +157,77 @@ Avec un grand nombre de variables on obtient un très grand nombre de combinaiso
 De plus on execute un double parcours de la liste des variables avec la fonction __List.sort_uniq__ mais aussi une double évaluation avec chaque appel de la fonction __eval__ à chaque valuations possibles.
 
 ## 3 Preuves de formules propositionnelles 
+### Partie 3.3
 
-Preuve pour la proposition (P Q R : Prop) : (P \/ Q -> R) -> (P -> R) /\ (Q -> R) de l'énoncé : 
+### Question 1 
 
-Lemma propProjet (P Q R : Prop) : (P \/ Q -> R) -> (P -> R) /\ (Q -> R).
-Proof.
-    intros.
-    And_Intro.
-    Impl_Intro.
-    assume (P \/ Q).
-    Impl_Elim in H and H1.
-    exact H2.
-    Or_Intro_1.
-    exact H0.
-    Impl_Intro.
-    assume (P \/ Q).
-    Impl_Elim in H and H1.
-    exact H2.
-    Or_Intro_2.
-    exact H0.
-Qed.
+Fonction __fresh_ident__ avec sa fonction auxiliaire : 
+
+    let rec fresh_aux (context, n : goal * int) : string=
+    match context with
+    |([], _) -> "H" ^ string_of_int n
+    |(liste, _)-> 
+        if (List.exists (fun (ident, _) -> ident = "H" ^ string_of_int n) liste) 
+        then fresh_aux(context, n+1)
+        else "H" ^ string_of_int n
+    ;; 
+
+    let fresh_ident (context : goal) : string = 
+    fresh_aux(context, 1)
+    ;;
+
+### Question 2 
+La fonction __valid_ident__ : 
+
+    let valid_ident (ident, context : ident * goal) : bool =
+    match context with
+    |([], _) -> true
+    |(liste, _) -> not(List.exists (fun (n,_) -> n = ident) liste)
+    ;;
+    
+
+Preuve pour la proposition (P Q R : Prop) : (P \\/ Q -> R) -> (P -> R) /\ (Q -> R) de l'énoncé : 
+
+    Lemma propProjet (P Q R : Prop) : (P \\/ Q -> R) -> (P -> R) /\ (Q -> R).
+    Proof.
+        intros.
+        And_Intro.
+        Impl_Intro.
+        assume (P \\/ Q).
+        Impl_Elim in H and H1.
+        exact H2.
+        Or_Intro_1.
+        exact H0.
+        Impl_Intro.
+        assume (P \\/ Q).
+        Impl_Elim in H and H1.
+        exact H2.
+        Or_Intro_2.
+        exact H0.
+    Qed.
 
 
 ### Question 3.3 4 
 Voici la preuve faite sur coq, nous nous sommes basé sur celle-ci afin de faire les étapes.
 Nous avons bien sûr dû changer les étapes selon les résultats obtenu avec notre fonction __apply_tactic__
 
-Lemma p (P Q R : Prop) : (P \/ Q -> R) -> (P -> R) /\ (Q -> R).
-Proof.
-    Impl_Intro.
-    And_Intro.
-    Impl_Intro.
-    assume (P \/ Q).
-    Impl_Elim in H and H1.
-    exact H2.
-    Or_Intro_1.
-    exact H0.
-    Impl_Intro.
-    assume (P \/ Q).
-    Impl_Elim in H and H1.
-    exact H2.
-    Or_Intro_2.
-    exact H0.
-Qed.
+    Lemma p (P Q R : Prop) : (P \\/ Q -> R) -> (P -> R) /\ (Q -> R).
+    Proof.
+        Impl_Intro.
+        And_Intro.
+        Impl_Intro.
+        assume (P \\/ Q).
+        Impl_Elim in H and H1.
+        exact H2.
+        Or_Intro_1.
+        exact H0.
+        Impl_Intro.
+        assume (P \\/ Q).
+        Impl_Elim in H and H1.
+        exact H2.
+        Or_Intro_2.
+        exact H0.
+    Qed.
 
 
 

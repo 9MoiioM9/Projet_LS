@@ -200,7 +200,7 @@ let print_goal goal =
   match goal with
   | ([], []) -> ""
   | ([], (header :: tail)) -> "======================\n" ^string_of_formula header ^ "\n" ^ (print_goal_aux([], tail))
-  | ((header, formule) :: queue, f) -> header ^ ": " ^ string_of_formula formule ^ "\n" ^ (print_goal_aux (queue, f))
+  | ((header, formule) :: tail, f) -> header ^ ": " ^ string_of_formula formule ^ "\n" ^ (print_goal_aux (tail, f))
 in 
 print_string(print_goal_aux goal)
 
@@ -232,6 +232,9 @@ type tactic =
 
 (* 3.3 *)
 (* Question 1 *)
+
+(* Les fonctions fresh_ident et fresh_aux permettent de donner un  identifiant non utilisé pour chaque hypothèse H*)
+
 let rec fresh_aux (context, n : goal * int) : string=
   match context with
   |([], _) -> "H" ^ string_of_int n
@@ -246,6 +249,7 @@ let fresh_ident (context : goal) : string =
 ;;
 
   (* Question 2 *)
+(* La fonction valid_ident fait la gestion des identifiants d'hypothèse*)
 
 let valid_ident (ident, context : ident * goal) : bool =
   match context with
@@ -253,83 +257,101 @@ let valid_ident (ident, context : ident * goal) : bool =
   |(liste, _) -> not(List.exists (fun (n,_) -> n = ident) liste)
 ;;
 
+(*Tests des fonctions fresh_ident et valid_ident avec notre exemple créé plus haut dans le code *)
 fresh_ident ex_enonce;;
 valid_ident(fresh_ident(ex_enonce), ex_enonce);;
 
   (* Question 3 *)
+(* Création d'une exception en cas d'erreur inattendu *)
 
 exception InvalidTactic
 
-let apply_tactic (tact,(h,g):tactic*goal) : goal list=
-  match tact with
+(* Cette fonction apply_tactic prend en compte tous les cas possibles 
+   elle provoque des warnings concernant les exceptions InvalidTactic mais nous n'avons pas juger important de les traiter
+   le code reste fonctionnel *)
+
+let apply_tactic (tactique , (h,context) : tactic * goal) : goal list=
+  match tactique with
   |And_Intro -> 
-      (match g with
-       | (Et(f1,f2) :: queue) -> [(h, f1 :: f2 :: queue)]
+      (match context with
+       | (Et(f1,f2) :: tail) -> [(h, f1 :: f2 :: tail)]
        | _ -> raise InvalidTactic)
 
   |Or_Intro_1 ->
-      (match g with
-       | (Ou(f1,f2) :: queue) -> [(h, f1 :: queue)]
+      (match context with
+       | (Ou(f1,f2) :: tail) -> [(h, f1 :: tail)]
        | _ -> raise InvalidTactic)
 
   |Or_Intro_2 ->
-      (match g with
-       | (Ou(f1,f2) :: queue) -> [(h, f2 :: queue)]
+      (match context with
+       | (Ou(f1,f2) :: tail) -> [(h, f2 :: tail)]
        | _ -> raise InvalidTactic)
 
   |Impl_Intro->
-      (match g with
-       | (Alors(f1,f2) :: queue) -> [((fresh_ident (h,g),f1)::h,f2 :: queue)]
+      (match context with
+       | (Alors(f1,f2) :: tail) -> [((fresh_ident (h,context),f1)::h,f2 :: tail)]
        | _ -> raise InvalidTactic)
 
   |Not_Intro ->
-      (match g with
-       | (Non(f1) :: queue) -> [((fresh_ident (h,g),f1)::h, False :: queue)]
+      (match context with
+       | (Non(f1) :: tail) -> [((fresh_ident (h,context),f1)::h, False :: tail)]
        | _ -> raise InvalidTactic)
 
-  |And_Elim_1 id ->
-      (match List.find (fun (x,y) -> x = id) h with
-       | (header,hyp) -> 
-           (match hyp with
-            | Et(f1,f2) -> [((fresh_ident(h,g),f1)::h,g)]
+  |And_Elim_1 identi ->
+      (match List.find (fun (x,x1) -> x = identi) h with
+       | (header,hypo) -> 
+           (match hypo with
+            | Et(f1,f2) -> [((fresh_ident(h,context),f1)::h,context)]
             | _ -> raise InvalidTactic)
        | _ -> raise InvalidTactic)
 
-  |And_Elim_2 id ->
-      (match List.find (fun (x,y) -> x = id) h with
-       | (header,hyp) -> 
-           (match hyp with
-            | Et(f1,f2) -> [((fresh_ident(h,g),f2)::h,g)]
-            | _ -> raise InvalidTactic)
-       | _ -> raise InvalidTactic) 
-
-  |Or_Elim id ->
-      (match List.find (fun (x,y) -> x = id) h with
-       | (header,hyp) -> 
-           (match hyp with
-            | Ou(f1,f2) -> (((fresh_ident(h,g),f1))::List.filter (fun (x,y) -> x<>id) h ,g) ::[(((fresh_ident(h,g),f2))::List.filter (fun (x,y) -> x<>id) h ,g)]
+  |And_Elim_2 identi ->
+      (match List.find (fun (x,x1) -> x = identi) h with
+       | (header,hypo) -> 
+           (match hypo with
+            | Et(f1,f2) -> [((fresh_ident(h,context),f2)::h,context)]
             | _ -> raise InvalidTactic)
        | _ -> raise InvalidTactic) 
 
-  |Impl_Elim (id1,id2) ->
-      (match List.find (fun (x,y) -> x = id1) h,List.find (fun (x,y) -> x = id2) h with
-       | (header1,hyp1),(header2,hyp2) -> (match (hyp1,hyp2) with
-           |(Alors(f1,f2),f3) ->  if(f1 = f3) then [((fresh_ident(h,g),f2)::h,g)]else raise InvalidTactic
+  |Or_Elim identi ->
+      (match List.find (fun (x,x1) -> x = identi) h with
+       | (header,hypo) -> 
+           (match hypo with
+            | Ou(f1,f2) -> 
+              (((fresh_ident(h,context),f1))
+              :: List.filter (fun (x,x1) -> x <> identi) h ,context) 
+              :: [(((fresh_ident(h,context),f2))
+              :: List.filter (fun (x,x1) -> x <> identi) h ,context)]
+            | _ -> raise InvalidTactic)
+       | _ -> raise InvalidTactic) 
+
+  |Impl_Elim (i1,i2) ->
+      (match List.find (fun (x,x1) -> x = i1) h,List.find (fun (x,x1) -> x = i2) h with
+       | (header1,hypo1),(header2,hypo2) -> (match (hypo1,hypo2) with
+           |(Alors(f1, f2), f3) ->  
+              if(f1 = f3) 
+              then [((fresh_ident(h, context), f2) :: h, context)]
+              else raise InvalidTactic
            | _ -> raise InvalidTactic)
        | _ -> raise InvalidTactic)
 
-  |Not_Elim (id1,id2) ->
-      (match (List.find (fun (x,y) -> x = id1) h,List.find(fun (x,y) -> x = id2) h) with
-       |(header1,hyp1),(header2,hyp2) -> (match (hyp1,hyp2) with
-           |(f1,f2) -> if(f1 = f2)then [((fresh_ident(h,g),False)::h,g)] else raise InvalidTactic
+  |Not_Elim (i1,i2) ->
+      (match (List.find (fun (x,x1) -> x = i1) h,List.find(fun (x,x1) -> x = i2) h) with
+       |(header1, hypo1),(header2, hypo2) -> (match (hypo1, hypo2) with
+           |(f1,f2) -> 
+              if(f1 = f2)
+              then [((fresh_ident(h, context), False)::h, context)] 
+              else raise InvalidTactic
            | _ -> raise InvalidTactic)
        | _ -> raise InvalidTactic)
 
-  |Exact id -> (match (List.find (fun (x,y) -> x = id) h,g) with
-      | ((id1,f1),f2::queue)->if(f1=f2)then [(h,queue)]else raise InvalidTactic
+  |Exact identi -> 
+    (match (List.find (fun (x,x1) -> x = identi) h,context) with
+      | ((i1,f1),f2::tail)->if(f1=f2)then [(h,tail)]else raise InvalidTactic
       | _ -> raise InvalidTactic)
     
-  |Assume form -> [((fresh_ident(h,g),form)::h,form :: g)]
+  |Assume formule -> 
+    [((fresh_ident(h,context),formule)::h,formule :: context)]
 ;;
 
 
@@ -342,7 +364,8 @@ let prop_Exemple_enonce =
 ;;
 
 
-(* Reprise de toutes les étapes pour valider la Preuve *)
+(* Reprise de toutes les étapes pour valider la Preuve de la proposition vu dans l'enonce 
+   Dans le ReadMe on a montré la réponse faite via CoqIDE, et on peut voir que les étapes diffèrent parfois*)
 
 let e1 = apply_tactic(Impl_Intro, ([] , prop_Exemple_enonce));;
 let e2 = apply_tactic(And_Intro, List.hd e1);;
@@ -354,3 +377,5 @@ let e7 = apply_tactic(Exact "H4", List.hd e6);;
 let e8 = apply_tactic(Impl_Intro, List.hd e7);;
 let e9 = apply_tactic(Exact "H4", List.hd e8);;
 
+
+(*Nous précisons que tout le code est fonctionnel sur nos machines personnelles*)
