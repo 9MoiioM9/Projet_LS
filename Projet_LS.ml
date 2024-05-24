@@ -140,11 +140,15 @@ let rec enumerate_cases l =
 (* Donc pour trois variables P,Q et R on aura 2^3 donc 8 lignes*)
 
 (* Tests de nos exemples vu plus haut dans le code *)
+
 enumerate_cases(set_vars exemple1);;
 enumerate_cases(set_vars exemple2);;
 enumerate_cases(set_vars exemple3);;
 enumerate_cases(set_vars exemple4);;
 enumerate_cases(set_vars exemple5);;
+
+(* 2.3 *)
+(* Question 2 *)
 
 let tautology formule =
   let rec tautology_aux vars =
@@ -165,3 +169,14 @@ tautology (Ou(Var "P", Non(Var "P")));; (* P \/ ~P - Renvoie True *)
 tautology (Et(Var "P", Non(Var "P")));; (* P /\ ~P - Renvoie False *)
 tautology (Alors (Var "Q", Ou(Var "P", Non(Var "P"))));; (* Q ==> (P \\/ ~P) - Renvoie True *)
 tautology (Alors (Var "Q", Ou(Var "P", Var "P")));; (* Q ==> (P \/ P) - Renvoie False *)
+
+(* 3.1 *)
+
+(* Question 1 *)
+
+type ident = string ;;
+
+type goal = (ident * tformula);;
+
+(* Question 2 *)
+

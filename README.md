@@ -49,7 +49,11 @@ Voir le code sur le fichier Projet_LS.ml
 
 ### Question 3 
 
+Voir le code sur le fichier Projet_LS.ml
+
 ### Question 4 
+
+Voir le code sur le fichier Projet_LS.ml
 
 ## 2.2 Sémantique via les tables de vérité
 
@@ -79,13 +83,19 @@ Voir le code sur le fichier Projet_LS.ml
 
 ### Question 2 
 
+Voir le code sur le fichier Projet_LS.ml
+
 ### Question 3 
+
+Voir le code sur le fichier Projet_LS.ml
 
 ### Question 4 
 Pour savoir combien de ligne on doit calculer on prend le nombre d'argument de la liste en entrée en puissance de 2.
 Donc avec les trois arguments P, Q et R on aura 2^3 donc 8 lignes.
 
 ### Question 5 
+
+Voir le code sur le fichier Projet_LS.ml
 
 ## 2.3 Tautologies 
 
@@ -137,6 +147,7 @@ Fonction _tautology_ :
     let valuations = tautology_aux variables in
     List.for_all (fun v -> eval formule v) valuations
     ;;
+    
 
 ### Question 3
 Concernant la fonction __tautology__ le principal inconvénient est la complexité exponentielle.
