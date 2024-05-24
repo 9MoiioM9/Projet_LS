@@ -341,6 +341,9 @@ let prop_Exemple_enonce =
   [Alors (Alors (Ou (Var "P" , Var "Q"),Var "R"), Et (Alors (Var "P", Var "R"), Alors (Var "Q", Var "R")))]
 ;;
 
+
+(* Reprise de toutes les étapes pour valider la Preuve *)
+
 let e1 = apply_tactic(Impl_Intro, ([] , prop_Exemple_enonce));;
 let e2 = apply_tactic(And_Intro, List.hd e1);;
 let e3 = apply_tactic(Impl_Intro, List.hd e2);;

@@ -1,4 +1,6 @@
 # Projet Logiciels Sûrs
+_Auteur_
+__Lespagnol Killian et Tribouillois Julien__
 
 _Pour la suite des exercices on concidère T pour True donc Vrai, F pour False donc Faux_
 
@@ -176,6 +178,10 @@ Proof.
     exact H0.
 Qed.
 
+
+### Question 3.3 4 
+Voici la preuve faite sur coq, nous nous sommes basé sur celle-ci afin de faire les étapes.
+Nous avons bien sûr dû changer les étapes selon les résultats obtenu avec notre fonction __apply_tactic__
 
 Lemma p (P Q R : Prop) : (P \/ Q -> R) -> (P -> R) /\ (Q -> R).
 Proof.
